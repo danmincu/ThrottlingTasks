@@ -14,7 +14,7 @@ namespace ThrottlingTasks
             var downloadTasks = new List<Task<RestResponse>>();
             while (nextIndex < maxConcurrencyLevel && nextIndex < tasks.Count)
             {
-                Console.WriteLine("Queuing up initial ApiRequest #{0}.", nextIndex + 1);
+                Console.WriteLine($"Queuing up initial request #{nextIndex + 1}.");
                 downloadTasks.Add(tasks[nextIndex].Request());
                 nextIndex++;
             }
@@ -29,7 +29,7 @@ namespace ThrottlingTasks
 
                     downloadTasks.Remove(downloadTask);
                     RestResponse requestResult = await downloadTask;
-                    Console.WriteLine("* Received {0}-byte ", requestResult.RawBytes.Length);
+                    Console.WriteLine($"* Received {requestResult.RawBytes.Length}-byte response.");
                 }
                 catch (Exception ex)
                 {
@@ -38,7 +38,7 @@ namespace ThrottlingTasks
 
                 if (nextIndex < tasks.Count)
                 {
-                    Console.WriteLine("New execution slot available.  Queuing up ApiRequest #{0}.", nextIndex + 1);
+                    Console.WriteLine($"New execution slot available.  Queuing up request #{nextIndex + 1}.");
                     downloadTasks.Add(tasks[nextIndex].Request());
                     nextIndex++;
                 }

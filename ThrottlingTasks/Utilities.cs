@@ -4,12 +4,6 @@ namespace ThrottlingTasks
 {
     public static class Utilities
     {
-
-        /// <summary>
-        /// An optimized method using an array as buffer instead of 
-        /// string concatenation. This is faster for return values having 
-        /// a length > 1.
-        /// </summary>
         public static string IntToStringFast(int value, char[] baseChars)
         {
             // 32 is the worst cast buffer size for base 2 and int.MaxValue
