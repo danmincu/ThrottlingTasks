@@ -1,12 +1,12 @@
-﻿using System;
-using System.Net;
+﻿using RestSharp;
+using System;
 using System.Threading.Tasks;
 
 namespace ThrottlingTasks
 {
     public interface IApiRequest
     {
-        Task<string> Request();
+        Task<RestResponse> Request();
     }
 
     public class DownloadImage : IApiRequest
@@ -18,9 +18,21 @@ namespace ThrottlingTasks
             this.uri = uri;
         }
 
-        public Task<string> Request()
+        public Task<RestResponse> Request()
         {
-            return new WebClient().DownloadStringTaskAsync(this.uri);
+            var client = new RestClient();
+            var request = new RestRequest(this.uri,Method.Get);
+            return client.ExecuteAsync(request);
+        }
+    }
+
+    public class PostRequest : IApiRequest
+    {
+        public Task<RestResponse> Request()
+        {
+            var client = new RestClient();
+            var request = new RestRequest("https://httpbin.org/post", Method.Post);
+            return client.ExecuteAsync(request);
         }
     }
 }

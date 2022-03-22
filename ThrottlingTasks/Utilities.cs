@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ThrottlingTasks
 {
@@ -37,6 +33,18 @@ namespace ThrottlingTasks
         public static string ToBase4(this Int16 value)
         {
             return IntToStringFast(value, new char[] { '0', '1', '2', '3' });
+        }
+
+        public static void Shuffle<T>(this Random rng, T[] array)
+        {
+            int n = array.Length;
+            while (n > 1)
+            {
+                int k = rng.Next(n--);
+                T temp = array[n];
+                array[n] = array[k];
+                array[k] = temp;
+            }
         }
 
     }

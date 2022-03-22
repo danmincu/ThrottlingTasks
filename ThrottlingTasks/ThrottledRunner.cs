@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace ThrottlingTasks
          public async Task RunAsync(IList<IApiRequest> tasks, int maxConcurrencyLevel = 4)
         {
             int nextIndex = 0;
-            var downloadTasks = new List<Task<string>>();
+            var downloadTasks = new List<Task<RestResponse>>();
             while (nextIndex < maxConcurrencyLevel && nextIndex < tasks.Count)
             {
                 Console.WriteLine("Queuing up initial ApiRequest #{0}.", nextIndex + 1);
@@ -23,12 +24,12 @@ namespace ThrottlingTasks
                 object lastTask = null;
                 try
                 {
-                    Task<string> downloadTask = await Task.WhenAny(downloadTasks);
+                    Task<RestResponse> downloadTask = await Task.WhenAny(downloadTasks);
                     lastTask = downloadTask.AsyncState;
 
                     downloadTasks.Remove(downloadTask);
-                    string requestResult = await downloadTask;
-                    Console.WriteLine("* Received {0}-byte ", requestResult.Length);
+                    RestResponse requestResult = await downloadTask;
+                    Console.WriteLine("* Received {0}-byte ", requestResult.RawBytes.Length);
                 }
                 catch (Exception ex)
                 {
